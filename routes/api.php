@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 
 
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\Admin;
+use App\Http\Middleware\Kontributor;
+use App\Http\Controllers\EventController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,11 +19,50 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-// Unauthenticated request
-Route::post('login', [AuthController::class, 'login']);
+/**
+ * * Authenticate request Group
+ * Route untuk request yang membutuhkan autentikasi
+ */
+Route::prefix('auth')->group(function () {
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('logout', [AuthController::class, 'logout']);
+});
 
 
-// Authenticated request Group
+
+
+/**
+ * * Authenticated request Group
+ * Kode di sini hanya bisa diakses oleh user yang sudah login
+ */
 Route::middleware('auth:api')->group(function () {
-    Route::get('/test', [AuthController::class, 'test']);
+
+    /**
+     * * Admin request Group
+     * Kode di sini hanya bisa diakses oleh admin
+     */
+    Route::middleware([Admin::class])->group(function () {
+        Route::prefix('events')->group(function () {
+            Route::get('admin', [EventController::class, 'index']);
+        });
+    });
+
+
+    /**
+     * * Kontributor & Admin request Group
+     * Kode di sini hanya bisa diakses oleh kontributor dan admin
+     */
+    Route::middleware([Kontributor::class])->group(function () {
+        Route::prefix('events')->group(function () {
+            Route::get('kontributor', [EventController::class, 'index']);
+        });
+    });
+
+
+    /**
+     * * All request Group
+     * Kode di sini bisa diakses oleh semua role user
+     */
+    Route::get('/user', [EventController::class, 'index']);
 });
