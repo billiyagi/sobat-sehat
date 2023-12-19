@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('description');
-            $table->string('thumbnail');
+            $table->string('thumbnail')->default('default-thumbnail.png');
             $table->string('location_at');
             $table->string('link_location')->nullable()->default(null);
             $table->timestamp('start_at')->nullable()->default(null);

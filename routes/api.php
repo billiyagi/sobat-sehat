@@ -43,9 +43,7 @@ Route::middleware('auth:api')->group(function () {
      * Kode di sini hanya bisa diakses oleh admin
      */
     Route::middleware([Admin::class])->group(function () {
-        Route::prefix('events')->group(function () {
-            Route::get('admin', [EventController::class, 'index']);
-        });
+        // Route
     });
 
 
@@ -54,9 +52,11 @@ Route::middleware('auth:api')->group(function () {
      * Kode di sini hanya bisa diakses oleh kontributor dan admin
      */
     Route::middleware([Kontributor::class])->group(function () {
-        Route::prefix('events')->group(function () {
-            Route::get('kontributor', [EventController::class, 'index']);
-        });
+        Route::get('events', [EventController::class, 'index']);
+        Route::get('events/{id}', [EventController::class, 'show']);
+        Route::post('events', [EventController::class, 'store']);
+        Route::put('events/{id}', [EventController::class, 'update']);
+        Route::delete('events/{id}', [EventController::class, 'destroy']);
     });
 
 
@@ -64,5 +64,5 @@ Route::middleware('auth:api')->group(function () {
      * * All request Group
      * Kode di sini bisa diakses oleh semua role user
      */
-    Route::get('/user', [EventController::class, 'index']);
+    // Route::get('/user', [EventController::class, 'index']);
 });
