@@ -44,6 +44,11 @@ Route::middleware('auth:api')->group(function () {
      */
     Route::middleware([Admin::class])->group(function () {
         // Route
+        Route::get('news', [NewsController::class, 'index']);
+        Route::get('news/{id}', [NewsController::class, 'show']);
+        Route::post('news', [NewsController::class, 'store']);
+        Route::put('news/{id}', [NewsController::class, 'update']);
+        Route::delete('news/{id}', [NewsController::class, 'destroy']);
     });
 
 
