@@ -67,4 +67,5 @@ Route::middleware('auth:api')->group(function () {
      */
     // Route::get('/user', [EventController::class, 'index']);
 });
-Route::get('search', [SearchController::class, 'events']);
+Route::get('search/events', [SearchController::class, 'events']);
+Route::get('search/news', [SearchController::class, 'news']);

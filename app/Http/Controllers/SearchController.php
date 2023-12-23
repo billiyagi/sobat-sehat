@@ -22,6 +22,14 @@ class SearchController extends Controller
                     return $this->responseSuccess($events);
     }
 
+    public function news(Request $request)
+    {
+        $news = DB::table('news')
+                    ->where('title', 'like', '%'.$request->get('query').'%')
+                    ->get();
+                    return $this->responseSuccess($news);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
