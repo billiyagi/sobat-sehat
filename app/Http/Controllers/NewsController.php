@@ -94,20 +94,16 @@ class NewsController extends Controller
 
         // Set data
         $news = [
-            'id'            =>  $request->id,
             'category_id'   =>  $request->category_id,
             'content'       =>  $request->content,
-            'publish_at'    =>  $request->publish_at,
             'status'        =>  $request->status,
-            'create_at'     =>  $request->create_at,
-            'update_at'     =>  $request->update_at,
             'thumbnail'     =>  '/assets/img/thumbnail/' . $thumbnailFileName,
             'user_id'       =>  auth()->user()->id,
             'slug'          =>  Str::of($request->name)->slug('-')
         ];
 
         // Store data
-        if ($news::where('id', $id)->update($news)) {
+        if (News::where('id', $id)->update($news)) {
             return $this->responseSuccess($news, 'News updated succesfully.');
         } else {
             return $this->responseError();
