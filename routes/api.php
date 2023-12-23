@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\Kontributor;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\NewsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes

@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NewsRequest;
 use Illuminate\Http\Request;
+use App\Models\News;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class NewsController extends Controller
 {
@@ -28,13 +32,10 @@ class NewsController extends Controller
 
         // Set data
         $news = [
-            'id'            =>  $request->id,
             'category_id'   =>  $request->category_id,
             'content'       =>  $request->content,
-            'publish_at'    =>  $request->publish_at,
+            'publish_at'    =>  null,
             'status'        =>  $request->status,
-            'create_at'     =>  $request->create_at,
-            'update_at'     =>  $request->update_at,
             'thumbnail'     =>  '/assets/img/thumbnail/' . $thumbnailFileName,
             'user_id'       =>  auth()->user()->id,
             'slug'          =>  Str::of($request->name)->slug('-')
@@ -46,7 +47,7 @@ class NewsController extends Controller
             // Store image
             $request->file('thumbnail')->storeAs('public/assets/img/thumbnail', $thumbnailFileName);
 
-            return $this->responseSuccess($event, 'Event created succesfully.');
+            return $this->responseSuccess($news, 'News created succesfully.');
         } else {
             return $this->responseError();
         }
@@ -61,7 +62,7 @@ class NewsController extends Controller
         $news = Event::find($id);
 
         if (!empty($news)) {
-            return $this->responseSuccess($news, 'Berita dengan ID ' . $id . ' ditemukan.');
+            return $this->responseSuccess($news, 'News dengan ID ' . $id . ' ditemukan.');
         } else {
             return $this->responseNotFound();
         }
@@ -107,7 +108,7 @@ class NewsController extends Controller
 
         // Store data
         if ($news::where('id', $id)->update($news)) {
-            return $this->responseSuccess($news, 'news updated succesfully.');
+            return $this->responseSuccess($news, 'News updated succesfully.');
         } else {
             return $this->responseError();
         }
@@ -128,7 +129,7 @@ class NewsController extends Controller
 
             // Delete data
             if ($news::destroy($id)) {
-                return $this->responseSuccess([], 'Berita dengan ID ' . $id . ' dihapus.');
+                return $this->responseSuccess([], 'News dengan ID ' . $id . ' dihapus.');
             } else {
                 return $this->responseError();
             }
@@ -136,32 +137,4 @@ class NewsController extends Controller
             return $this->responseNotFound();
         }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    // public function create()
-    // {
-    //     //
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(Request $request)
-    // {
-    //     //
-    // }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    // public function edit(string $id)
-    // {
-    //     //
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     */
 }
