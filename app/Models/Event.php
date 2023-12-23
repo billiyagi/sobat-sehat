@@ -9,5 +9,10 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'name', 'created_at', 'updated_at'];
+
+    public function event()
+    {
+        return $this->hasMany(RegistrationEventUser::class, 'user_id');
+    }
 }

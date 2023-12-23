@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\Kontributor;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\RegistrationEventUserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -65,4 +66,6 @@ Route::middleware('auth:api')->group(function () {
      * Kode di sini bisa diakses oleh semua role user
      */
     // Route::get('/user', [EventController::class, 'index']);
+
+    Route::post('/registration/event/user', [RegistrationEventUserController::class, 'store']);
 });

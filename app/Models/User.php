@@ -63,4 +63,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    
+    public function user()
+    {
+        return $this->hasMany(RegistrationEventUser::class, 'user_id');
+    }
 }
