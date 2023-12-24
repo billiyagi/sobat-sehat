@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\RegistrationEventSubscribers;
 
-class SubscriberUserController extends Controller
+class RegistrationEventSubscribersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,13 +21,13 @@ class SubscriberUserController extends Controller
     public function store(Request $request)
     {
         $validateData = $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'role_id' => 'required',
+            'user_id' => 'required',
+            'event_id' => 'required',
+            'arrival_at' => 'required',
         ]);
 
-        if (RegistrationEventUser::create($validateData)) {
-            return $this->responseSuccess($validateData, 'Anda berhasil registrasi event.');
+        if (RegistrationEventSubscribers::create($validateData)) {
+            return $this->responseSuccess($validateData, 'Anda berhasil registrasi.');
         } else {
             return $this->responseError();
         }

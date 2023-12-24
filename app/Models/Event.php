@@ -15,4 +15,10 @@ class Event extends Model
     {
         return $this->hasMany(RegistrationEventUser::class, 'user_id');
     }
+
+    public function eventAsSubscriber()
+    {
+        return $this->hasMany(RegistrationEventSubscribers::class, 'user_id');
+    }
+
 }

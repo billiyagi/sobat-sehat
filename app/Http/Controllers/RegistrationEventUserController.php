@@ -31,22 +31,6 @@ class RegistrationEventUserController extends Controller
         } else {
             return $this->responseError();
         }
-
-        // $registrationEventUser = RegistrationEventUser::create($validateData);
-        // $registrationEventUsername = User::find($validateData['user_id']);
-        // $registrationEventUserEventname = Event::find($validateData['event_id']);
-
-        // $data = [
-        //     'messages' => 'Berhasil Registrasi Event',
-        //     'data' => [
-        //                 'Registration Event User' => $registrationEventUsers,
-        //                 'Registration Event Username' => $registrationEventUsername,
-        //                 'Registration Event User Eventname' => $registrationEventUserEventname,
-        //             ],
-        // ];
-        
-        // return response()->json($data, 201);
-
     }
 
     /**

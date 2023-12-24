@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subscriber', function (Blueprint $table) {
+        Schema::create('user_subscribers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->unsignedBigInteger('role_id');
-            $table->foreign('role_id')->references('id')->on('roles');
+            $table->string('password');
+            $table->enum('role', ['admin', 'kontributor', 'user'])->default('user');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subscriber');
+        Schema::dropIfExists('user_subscribers');
     }
 };

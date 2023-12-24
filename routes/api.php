@@ -9,6 +9,7 @@ use App\Http\Middleware\Admin;
 use App\Http\Middleware\Kontributor;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\RegistrationEventUserController;
+use App\Http\Controllers\RegistrationEventSubscribersController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -68,6 +69,5 @@ Route::middleware('auth:api')->group(function () {
     // Route::get('/user', [EventController::class, 'index']);
 
     Route::post('/registration/event/user', [RegistrationEventUserController::class, 'store']);
-    Route::get('/registrations/users/events', [RegistrationEventUserController::class, 'index']);
-    Route::post('/subscriber', [SubscriberUserController::class, 'store']);
+    Route::post('/registration/event/subscriber', [RegistrationEventSubscribersController::class, 'store']);
 });
