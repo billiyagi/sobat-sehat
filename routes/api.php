@@ -5,9 +5,12 @@ use Illuminate\Support\Facades\Route;
 
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\Kontributor;
 use App\Http\Controllers\EventController;
+use App\Models\User;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -57,6 +60,9 @@ Route::middleware('auth:api')->group(function () {
         Route::post('events', [EventController::class, 'store']);
         Route::put('events/{id}', [EventController::class, 'update']);
         Route::delete('events/{id}', [EventController::class, 'destroy']);
+        
+        
+        
     });
 
 
@@ -64,5 +70,12 @@ Route::middleware('auth:api')->group(function () {
      * * All request Group
      * Kode di sini bisa diakses oleh semua role user
      */
-    // Route::get('/user', [EventController::class, 'index']);
+    Route::middleware('auth:sanctum')->group(function (){
+        Route::get('/users', [UserController::class, 'indexUsers']);
+        Route::get('/users{id}', [UserController::class, 'showUsers']);
+        Route::post('/users', [UserController::class, 'store']);
+        Route::put('/users{id}', [UserController::class, 'update']);
+        Route::delete('/users{id}', [UserController::class, 'destroy']);
+    });
+  
 });
