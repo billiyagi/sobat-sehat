@@ -7,19 +7,45 @@ use Illuminate\Http\Request;
 use App\Models\News;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\User;
+use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 
 class NewsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $news = news::all();
+        if ($request->get('limit')) {
+            $news = DB::table('news')->limit($request->get('limit'))->get();
+        } else {
+            $news = News::all();
+        }
+
+        $result = [];
+
+        foreach ($news as $key => $value) {
+            $result[$key] = [
+                'id'            =>  $value->id,
+                'title'         =>  $value->title,
+                'category_id'   =>  $value->category_id,
+                'content'       =>  $value->content,
+                'published_at'    =>  $value->published_at,
+                'status'        =>  $value->status,
+                'thumbnail'     =>  $value->thumbnail,
+                'user_id'       =>  $value->user_id,
+                'slug'          =>  $value->slug,
+                'created_at'    =>  $value->created_at,
+                'updated_at'    =>  $value->updated_at,
+                'category'      =>  Category::find($value->category_id),
+                'author'          =>  User::find($value->user_id)
+            ];
+        }
 
         if (!empty($news)) {
-            return $this->responseSuccess($news);
+            return $this->responseSuccess($result);
         } else {
             return $this->responseNotFound();
         }
@@ -32,13 +58,14 @@ class NewsController extends Controller
 
         // Set data
         $news = [
+            'title'         =>  $request->title,
             'category_id'   =>  $request->category_id,
             'content'       =>  $request->content,
             'publish_at'    =>  null,
             'status'        =>  $request->status,
             'thumbnail'     =>  '/assets/img/thumbnail/' . $thumbnailFileName,
             'user_id'       =>  auth()->user()->id,
-            'slug'          =>  Str::of($request->name)->slug('-')
+            'slug'          =>  Str::of($request->title)->slug('-')
         ];
 
         // Store data
@@ -59,16 +86,64 @@ class NewsController extends Controller
     public function show(string $id)
     {
         //
-        $news = Event::find($id);
+        $news = News::find($id);
+
+        $result = [
+            'id'            =>  $news->id,
+            'title'         =>  $news->title,
+            'category_id'   =>  $news->category_id,
+            'content'       =>  $news->content,
+            'publish_at'    =>  $news->publish_at,
+            'status'        =>  $news->status,
+            'thumbnail'     =>  $news->thumbnail,
+            'user_id'       =>  $news->user_id,
+            'slug'          =>  $news->slug,
+            'created_at'    =>  $news->created_at,
+            'updated_at'    =>  $news->updated_at,
+            'deleted_at'    =>  $news->deleted_at,
+            'category'      =>  Category::find($news->category_id),
+            'author'        =>  User::find($news->user_id)
+        ];
 
         if (!empty($news)) {
-            return $this->responseSuccess($news, 'News dengan ID ' . $id . ' ditemukan.');
+            return $this->responseSuccess($result, 'News dengan ID ' . $id . ' ditemukan.');
         } else {
             return $this->responseNotFound();
         }
     }
 
-    
+    /**
+     * Display the specified resource.
+     */
+    public function showBySlug(string $slug)
+    {
+        $news = News::where('slug', $slug)->first();
+
+        $result = [
+            'id'            =>  $news->id,
+            'title'         =>  $news->title,
+            'category_id'   =>  $news->category_id,
+            'content'       =>  $news->content,
+            'publish_at'    =>  $news->publish_at,
+            'status'        =>  $news->status,
+            'thumbnail'     =>  $news->thumbnail,
+            'user_id'       =>  $news->user_id,
+            'slug'          =>  $news->slug,
+            'created_at'    =>  $news->created_at,
+            'updated_at'    =>  $news->updated_at,
+            'deleted_at'    =>  $news->deleted_at,
+            'category'      =>  Category::find($news->category_id),
+            'author'        =>  User::find($news->user_id)
+        ];
+
+        if (!empty($news)) {
+            return $this->responseSuccess($result, 'News dengan slug ' . $slug . ' ditemukan.');
+        } else {
+            return $this->responseNotFound();
+        }
+    }
+
+
     public function update(Request $request, string $id)
     {
         //

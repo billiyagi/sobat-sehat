@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
@@ -14,8 +16,26 @@ class EventController extends Controller
     {
         $events = Event::all();
 
+        $result = [];
+
+        foreach ($events as $key => $value) {
+            $result[$key] = [
+                'id'            =>  $value->id,
+                'name'          =>  $value->name,
+                'end_at'        =>  $value->end_at,
+                'start_at'      =>  $value->start_at,
+                'link_location' =>  $value->link_location,
+                'location_at'   =>  $value->location_at,
+                'thumbnail'     =>  $value->thumbnail,
+                'slug'          =>  $value->slug,
+                'created_at'    =>  $value->created_at,
+                'updated_at'    =>  $value->updated_at,
+                'author'          =>  User::find($value->user_id)
+            ];
+        }
+
         if (!empty($events)) {
-            return $this->responseSuccess($events);
+            return $this->responseSuccess($result);
         } else {
             return $this->responseNotFound();
         }
@@ -99,10 +119,50 @@ class EventController extends Controller
 
     public function show($id)
     {
-        $event = Event::find($id);
+        $getEvent = Event::find($id);
+
+        $event = [
+            'id'            =>  $getEvent->id,
+            'name'          =>  $getEvent->name,
+            'end_at'        =>  $getEvent->end_at,
+            'start_at'      =>  $getEvent->start_at,
+            'link_location' =>  $getEvent->link_location,
+            'location_at'   =>  $getEvent->location_at,
+            'thumbnail'     =>  $getEvent->thumbnail,
+            'slug'          =>  $getEvent->slug,
+            'created_at'    =>  $getEvent->created_at,
+            'updated_at'    =>  $getEvent->updated_at,
+            'author'          =>  User::find($getEvent->user_id)
+        ];
 
         if (!empty($event)) {
             return $this->responseSuccess($event, 'Event dengan ID ' . $id . ' ditemukan.');
+        } else {
+            return $this->responseNotFound();
+        }
+    }
+
+    public function showBySlug($slug)
+    {
+        $getEvent = Event::where('slug', $slug)->first();
+
+        $event = [
+            'id'            =>  $getEvent->id,
+            'name'          =>  $getEvent->name,
+            'end_at'        =>  $getEvent->end_at,
+            'start_at'      =>  $getEvent->start_at,
+            'link_location' =>  $getEvent->link_location,
+            'description' =>  $getEvent->description,
+            'location_at'   =>  $getEvent->location_at,
+            'thumbnail'     =>  $getEvent->thumbnail,
+            'slug'          =>  $getEvent->slug,
+            'created_at'    =>  $getEvent->created_at,
+            'updated_at'    =>  $getEvent->updated_at,
+            'author'          =>  User::find($getEvent->user_id)
+        ];
+
+        if (!empty($event)) {
+            return $this->responseSuccess($event, 'Event dengan ID ' . $slug . ' ditemukan.');
         } else {
             return $this->responseNotFound();
         }
@@ -123,6 +183,17 @@ class EventController extends Controller
             } else {
                 return $this->responseError();
             }
+        } else {
+            return $this->responseNotFound();
+        }
+    }
+
+    public function featured()
+    {
+        $events = DB::table('events')->limit(1)->get();
+
+        if (!empty($events)) {
+            return $this->responseSuccess($events);
         } else {
             return $this->responseNotFound();
         }
