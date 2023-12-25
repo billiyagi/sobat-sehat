@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\Kontributor;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\NewsController;
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,9 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('me', [AuthController::class, 'me']);
+    Route::post('verify', [AuthController::class, 'verify']);
 });
 
 
@@ -72,3 +76,5 @@ Route::middleware('auth:api')->group(function () {
      */
     // Route::get('/user', [EventController::class, 'index']);
 });
+Route::get('search/events', [SearchController::class, 'events']);
+Route::get('search/news', [SearchController::class, 'news']);
