@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Namshi\JOSE\JWT;
+use PHPOpenSourceSaver\JWTAuth\JWTAuth;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -58,6 +61,42 @@ class AuthController extends Controller
                 'token' => Auth::refresh(),
                 'type' => 'bearer',
             ]
+        ]);
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|min:3',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = User::create(array_merge(
+            $request->only('name', 'email'),
+            ['password' => bcrypt($request->password)]
+        ));
+
+        return response()->json([
+            'status' => 'success',
+            'user' => $user,
+        ]);
+    }
+
+    public function me(JWTAuth $JWTAuth, Request $request)
+    {
+
+        return response()->json([
+            'status' => 'success',
+            'user' => $JWTAuth->user()
+        ]);
+    }
+
+    public function verify(Request $request, JWTAuth $JWTAuth)
+    {
+        return response()->json([
+            'status' => 'success',
+            'message' => $JWTAuth->check(),
         ]);
     }
 }
