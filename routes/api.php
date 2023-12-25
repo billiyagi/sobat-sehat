@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\Kontributor;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\SearchController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -66,3 +67,5 @@ Route::middleware('auth:api')->group(function () {
      */
     // Route::get('/user', [EventController::class, 'index']);
 });
+Route::get('search/events', [SearchController::class, 'events']);
+Route::get('search/news', [SearchController::class, 'news']);
