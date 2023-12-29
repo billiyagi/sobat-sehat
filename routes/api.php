@@ -11,6 +11,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
 
 
 /*
@@ -77,7 +78,10 @@ Route::middleware('auth:api')->group(function () {
      * * All request Group
      * Kode di sini bisa diakses oleh semua role user
      */
-    // Route::get('/user', [EventController::class, 'index']);
+    Route::get('comments', [CommentController::class, 'index']);
+    Route::get('comments/{id}', [CommentController::class, 'show']);
+
+    Route::post('comments', [CommentController::class, 'store']);
 });
 
 
@@ -98,3 +102,7 @@ Route::get('categories/{id}', [CategoryController::class, 'show']);
 
 Route::get('search/events', [SearchController::class, 'events']);
 Route::get('search/news', [SearchController::class, 'news']);
+
+
+Route::get('comments/type/{type}/{id}', [CommentController::class, 'getCommentsByType']);
+Route::get('comments/parent/{parent}', [CommentController::class, 'getCommentByParent']);

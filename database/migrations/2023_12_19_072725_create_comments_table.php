@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('events_id');
-            $table->unsignedBigInteger('news_id');
+            $table->unsignedBigInteger('events_id')->nullable();
+            $table->unsignedBigInteger('news_id')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('parent_id');
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->text('content');
             $table->enum('type', ['event', 'news']);
             $table->timestamps();
