@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventsRequest;
 use Illuminate\Http\Request;
 use App\Models\Event;
-use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -119,7 +118,7 @@ class EventController extends Controller
         }
     }
 
-    public function show($id)   
+    public function show($id)
     {
         $getEvent = Event::find($id);
 

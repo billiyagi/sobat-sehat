@@ -6,15 +6,16 @@ use App\Models\Event;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
-{ 
-    
+{
+
     // Menampilkan semua user
     public function indexUsers()
     {
         $users = User::all();
-        if($users->isEmpty()) {
+        if ($users->isEmpty()) {
             return $this->responseNotFound('User not Found');
         }
 
@@ -25,7 +26,7 @@ class UserController extends Controller
     public function showUser($id)
     {
         $user = User::find($id);
-        if(!$user){
+        if (!$user) {
             return $this->responseNotFound('User not found');
         }
         return $this->responseSuccess($user);
@@ -49,7 +50,7 @@ class UserController extends Controller
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
             'role' => $request->input('role'),
-            
+
         ]);
 
         $user->save();
@@ -61,11 +62,10 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-       $validator = Validator::make($request->all(), [
-        'name' => 'required',
-        'email' => 'required|email|unique:users,email' . $id,
-        'role' => 'required|in:admin,kontributor,user',
-       ]);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $id,
+        ]);
 
         if ($validator->fails()) {
             return $this->responseError($validator->errors(), 400);
@@ -73,8 +73,10 @@ class UserController extends Controller
 
         $user->name = $request->input('name');
         $user->email = $request->input('email');
-        $user->role = $request->input('role');
-        
+        $user->role = empty($request->input('role')) ? $user->role : $request->input('role');
+        $user->password = empty($request->input('password')) ? $user->password : Hash::make($request->input('password'));
+
+
         $user->save();
 
         return $this->responseSuccess($user, 'User updated successfully.');
@@ -84,7 +86,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if(!$user){
+        if (!$user) {
             return $this->responseError("User not found.", 404);
         }
         $user->delete();

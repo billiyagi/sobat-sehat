@@ -71,9 +71,6 @@ Route::middleware('auth:api')->group(function () {
         Route::post('events', [EventController::class, 'store']);
         Route::put('events/{id}', [EventController::class, 'update']);
         Route::delete('events/{id}', [EventController::class, 'destroy']);
-        
-        
-        
     });
 
 
@@ -81,13 +78,13 @@ Route::middleware('auth:api')->group(function () {
      * * All request Group
      * Kode di sini bisa diakses oleh semua role user
      */
-          Route::get('/users', [UserController::class, 'indexUsers']);
-        Route::get('/users{id}', [UserController::class, 'showUsers']);
-        Route::post('/users', [UserController::class, 'store']);
-        Route::put('/users{id}', [UserController::class, 'update']);
-        Route::delete('/users{id}', [UserController::class, 'destroy']);
-  
-      Route::get('comments', [CommentController::class, 'index']);
+    Route::get('/users', [UserController::class, 'indexUsers']);
+    Route::get('/users/{id}', [UserController::class, 'showUser']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+    Route::get('comments', [CommentController::class, 'index']);
     Route::get('comments/{id}', [CommentController::class, 'show']);
 
     Route::post('comments', [CommentController::class, 'store']);
