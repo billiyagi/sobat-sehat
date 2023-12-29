@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('register_event', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('events_id')->nullable();
-            $table->unsignedBigInteger('news_id')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('parent_id')->nullable();
-            $table->text('content');
-            $table->enum('type', ['event', 'news']);
+            $table->unsignedBigInteger('event_id');
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('register_event');
     }
 };
