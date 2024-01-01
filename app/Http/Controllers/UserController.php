@@ -38,7 +38,7 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'role' => 'required|in:admin,konributor,user'
+            'role' => 'required|in:admin,kontributor,user'
         ]);
 
         if ($validator->fails()) {
@@ -91,6 +91,6 @@ class UserController extends Controller
         }
         $user->delete();
 
-        return $this->responseSuccess(['message' => 'User deleted'], 200);
+        return $this->responseSuccess('User deleted', 200);
     }
 }

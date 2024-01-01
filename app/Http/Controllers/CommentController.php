@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Http\Requests\CommentsRequest;
 use App\Models\User;
+use App\Models\Event;
+use App\Models\News;
 
 class CommentController extends Controller
 {
@@ -62,7 +64,25 @@ class CommentController extends Controller
     public function index()
     {
         $comments = Comment::all();
-        return $this->responseSuccess('List Semua Komentar', $comments);
+        $results = [];
+        foreach ($comments as $comment) {
+            $user = User::find($comment->user_id);
+            $results[] = [
+                'id' => $comment->id,
+                'events' => Event::find($comment->events_id) ? Event::find($comment->events_id) : 0,
+                'news' => News::find($comment->news_id) ? News::find($comment->news_id) : 0,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                ],
+                'child' => Comment::where('parent_id', $comment->id)->get(),
+                'content' => $comment->content,
+                'type' => $comment->type,
+                'created_at' => $comment->created_at,
+                'updated_at' => $comment->updated_at,
+            ];
+        }
+        return $this->responseSuccess($results, 'List Semua Komentar');
     }
 
     /**

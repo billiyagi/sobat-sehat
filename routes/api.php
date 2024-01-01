@@ -13,6 +13,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\RegistrationEventController;
+use App\Http\Controllers\SubscribeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,12 +54,23 @@ Route::middleware('auth:api')->group(function () {
      * Kode di sini hanya bisa diakses oleh admin
      */
     Route::middleware([Admin::class])->group(function () {
-        // Route
 
+        // News
         Route::get('news/{id}', [NewsController::class, 'show']);
         Route::post('news', [NewsController::class, 'store']);
         Route::put('news/{id}', [NewsController::class, 'update']);
         Route::delete('news/{id}', [NewsController::class, 'destroy']);
+
+        //  Users
+        Route::get('/users', [UserController::class, 'indexUsers']);
+        Route::get('/users/{id}', [UserController::class, 'showUser']);
+        Route::post('/users', [UserController::class, 'store']);
+        Route::put('/users/{id}', [UserController::class, 'update']);
+        Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+        // Subscribers
+        Route::get('/subscribers', [SubscribeController::class, 'index']);
+        Route::delete('/subscribers/{id}', [SubscribeController::class, 'destroy']);
     });
 
 
@@ -68,9 +81,15 @@ Route::middleware('auth:api')->group(function () {
     Route::middleware([Kontributor::class])->group(function () {
 
 
+        // Events
         Route::post('events', [EventController::class, 'store']);
         Route::put('events/{id}', [EventController::class, 'update']);
         Route::delete('events/{id}', [EventController::class, 'destroy']);
+
+        // Users delete
+        Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+        Route::get('registered/events', [RegistrationEventController::class, 'index']);
     });
 
 
@@ -78,16 +97,18 @@ Route::middleware('auth:api')->group(function () {
      * * All request Group
      * Kode di sini bisa diakses oleh semua role user
      */
-    Route::get('/users', [UserController::class, 'indexUsers']);
-    Route::get('/users/{id}', [UserController::class, 'showUser']);
-    Route::post('/users', [UserController::class, 'store']);
-    Route::put('/users/{id}', [UserController::class, 'update']);
-    Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
+
+
+
+    // Comments
     Route::get('comments', [CommentController::class, 'index']);
     Route::get('comments/{id}', [CommentController::class, 'show']);
-
     Route::post('comments', [CommentController::class, 'store']);
+
+    // Registration Events
+    Route::get('registered/{id}', [RegistrationEventController::class, 'isRegistered']);
+    Route::post('register/event', [RegistrationEventController::class, 'store']);
 });
 
 
@@ -95,20 +116,29 @@ Route::middleware('auth:api')->group(function () {
  * * Public request Group
  * Kode di sini bisa diakses oleh publik
  */
+
+
+//  get Events public
 Route::get('events', [EventController::class, 'index']);
 Route::get('events/{id}', [EventController::class, 'show']);
 Route::get('events/show/featured', [EventController::class, 'featured']);
 Route::get('events/show/{slug}', [EventController::class, 'showBySlug']);
 
+// get News public
 Route::get('news', [NewsController::class, 'index']);
 Route::get('news/show/{slug}', [NewsController::class, 'showBySlug']);
 
+// get Categories public
 Route::get('categories', [CategoryController::class, 'index']);
 Route::get('categories/{id}', [CategoryController::class, 'show']);
 
+// get Search public
 Route::get('search/events', [SearchController::class, 'events']);
 Route::get('search/news', [SearchController::class, 'news']);
 
-
+// get Comments public
 Route::get('comments/type/{type}/{id}', [CommentController::class, 'getCommentsByType']);
 Route::get('comments/parent/{parent}', [CommentController::class, 'getCommentByParent']);
+
+// subscribe
+Route::post('subscribe', [SubscribeController::class, 'store']);

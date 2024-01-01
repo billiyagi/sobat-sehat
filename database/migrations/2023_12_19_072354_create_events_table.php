@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('link_location')->nullable()->default(null);
             $table->timestamp('start_at')->nullable()->default(null);
             $table->timestamp('end_at')->nullable()->default(null);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

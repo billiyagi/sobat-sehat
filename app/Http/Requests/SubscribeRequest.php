@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class NewsRequest extends FormRequest
+class SubscribeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,7 @@ class NewsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id'   =>  'required',
-            'content'       =>  'required',
-            'thumbnail'     =>  'image:jpeg,png,jpg|max:2048',
+            'email' => 'required|email',
         ];
     }
 }

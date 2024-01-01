@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Category;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class NewsController extends Controller
 {
@@ -144,10 +145,19 @@ class NewsController extends Controller
     }
 
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         //
-        $news = News::find($id);
+        $news = News::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'title'         => 'string',
+            'thumbnail'     =>  'image:jpeg,png,jpg|max:2048'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseError($validator->errors(), 400);
+        }
 
         // Check if thumbnail is uploaded
         if ($request->hasFile('thumbnail')) {
@@ -169,17 +179,19 @@ class NewsController extends Controller
 
         // Set data
         $news = [
-            'category_id'   =>  $request->category_id,
-            'content'       =>  $request->content,
-            'status'        =>  $request->status,
-            'thumbnail'     =>  '/assets/img/thumbnail/' . $thumbnailFileName,
-            'user_id'       =>  auth()->user()->id,
-            'slug'          =>  Str::of($request->name)->slug('-')
+            'title'         => $request->title ? $request->title : $news->title,
+            'category_id'   =>  $request->category_id ? $request->category_id : $news->category_id,
+            'content'       =>  $request->content ? $request->content : $news->content,
+            'status'        =>  $request->status ? $request->status : $news->status,
+            'thumbnail'     =>  $thumbnailFileName ? '/assets/img/thumbnail/' . $thumbnailFileName : $news->thumbnail,
+            'user_id'       =>  auth()->user()->id
         ];
+
+
 
         // Store data
         if (News::where('id', $id)->update($news)) {
-            return $this->responseSuccess($news, 'News updated succesfully.');
+            return $this->responseSuccess($request->get('title'), 'News updated succesfully.');
         } else {
             return $this->responseError();
         }

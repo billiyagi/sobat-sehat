@@ -133,7 +133,8 @@ class EventController extends Controller
             'slug'          =>  $getEvent->slug,
             'created_at'    =>  $getEvent->created_at,
             'updated_at'    =>  $getEvent->updated_at,
-            'author'          =>  User::find($getEvent->user_id)
+            'author'          =>  User::find($getEvent->user_id),
+            'description'   =>  $getEvent->description
         ];
 
         if (!empty($event)) {
