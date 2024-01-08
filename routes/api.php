@@ -15,6 +15,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\RegistrationEventController;
 use App\Http\Controllers\SubscribeController;
+use App\Http\Controllers\AnalyticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +91,13 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
         Route::get('registered/events', [RegistrationEventController::class, 'index']);
+
+        // Analytics
+        Route::get('analytics/subscribers', [AnalyticsController::class, 'getSubscribers']);
+        Route::get('analytics/events', [AnalyticsController::class, 'getTotalEvents']);
+        Route::get('analytics/user-register-events', [AnalyticsController::class, 'getUserRegisterEvents']);
+        Route::get('analytics/recently-events', [AnalyticsController::class, 'getRecentEvents']);
+        Route::get('analytics/news', [AnalyticsController::class, 'getTotalNews']);
     });
 
 
@@ -109,6 +117,8 @@ Route::middleware('auth:api')->group(function () {
     // Registration Events
     Route::get('registered/{id}', [RegistrationEventController::class, 'isRegistered']);
     Route::post('register/event', [RegistrationEventController::class, 'store']);
+
+    // Analytics
 });
 
 
@@ -121,12 +131,13 @@ Route::middleware('auth:api')->group(function () {
 //  get Events public
 Route::get('events', [EventController::class, 'index']);
 Route::get('events/{id}', [EventController::class, 'show']);
-Route::get('events/show/featured', [EventController::class, 'featured']);
+Route::get('events/on/featured', [EventController::class, 'featured']);
 Route::get('events/show/{slug}', [EventController::class, 'showBySlug']);
 
 // get News public
 Route::get('news', [NewsController::class, 'index']);
 Route::get('news/show/{slug}', [NewsController::class, 'showBySlug']);
+Route::get('news/on/featured', [NewsController::class, 'featured']);
 
 // get Categories public
 Route::get('categories', [CategoryController::class, 'index']);

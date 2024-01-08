@@ -69,7 +69,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|min:3',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
         ]);
 
         $user = User::create(array_merge(

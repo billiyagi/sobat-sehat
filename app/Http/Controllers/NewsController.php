@@ -52,6 +52,37 @@ class NewsController extends Controller
         }
     }
 
+    public function featured()
+    {
+        $news = News::where('status', 'published')->orderBy('created_at', 'desc')->take(1)->get();
+
+        $result = [];
+
+        foreach ($news as $key => $value) {
+            $result[$key] = [
+                'id'            =>  $value->id,
+                'title'         =>  $value->title,
+                'category_id'   =>  $value->category_id,
+                'content'       =>  $value->content,
+                'published_at'    =>  $value->published_at,
+                'status'        =>  $value->status,
+                'thumbnail'     =>  $value->thumbnail,
+                'user_id'       =>  $value->user_id,
+                'slug'          =>  $value->slug,
+                'created_at'    =>  $value->created_at,
+                'updated_at'    =>  $value->updated_at,
+                'category'      =>  Category::find($value->category_id),
+                'author'          =>  User::find($value->user_id)
+            ];
+        }
+
+        if (!empty($news)) {
+            return $this->responseSuccess($result);
+        } else {
+            return $this->responseNotFound();
+        }
+    }
+
     public function store(NewsRequest $request, News $news)
     {
         // Generate random file name
