@@ -138,6 +138,7 @@ Route::get('events/show/{slug}', [EventController::class, 'showBySlug']);
 Route::get('news', [NewsController::class, 'index']);
 Route::get('news/show/{slug}', [NewsController::class, 'showBySlug']);
 Route::get('news/on/featured', [NewsController::class, 'featured']);
+Route::get('news-recently', [NewsController::class, 'recently']);
 
 // get Categories public
 Route::get('categories', [CategoryController::class, 'index']);
